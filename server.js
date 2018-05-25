@@ -27,7 +27,6 @@ app.get('/todos/:id', function(req, res){
 
 	var todoId = parseInt(req.params.id,10);
 	var matchedTodo = _.findWhere(todos, {id: todoId});
-
 		if(matchedTodo){
 			res.json(matchedTodo);
 		}else{
@@ -37,10 +36,8 @@ app.get('/todos/:id', function(req, res){
 
 //POST/todos
 app.post('/todos', function(req, res){
-	var body = _.pick(req.body, 'description', 'completed');
-
 	//using pick to only pick required data
-	
+	var body = _.pick(req.body, 'description', 'completed');
 
 	if(!_.isBoolean(body.completed) || !_.isString(body.description) || body.description.trim().length === 0 ){
 		return res.status(404).send();
@@ -55,8 +52,17 @@ app.post('/todos', function(req, res){
 
 	res.json(body);
 });
-
-
+//delete unwanted resourcce
+app.delete('/todos/:id', function(req, res){
+	var todoId = parseInt(req.params.id,10);
+	var matchedTodo = _.findWhere(todos, {id: todoId});	
+	if(!matchedTodo){
+		res.status(404).send();
+	}else{
+		todos = _.without(todos, matchedTodo);
+		res.json(matchedTodo);
+	}
+})
 
 app.listen(PORT, function(){
 	console.log('express is running at port: '+ PORT)
