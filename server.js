@@ -37,11 +37,17 @@ app.get('/todos/:id', function(req, res){
 
 //POST/todos
 app.post('/todos', function(req, res){
-	var body = req.body;
+	var body = _.pick(req.body, 'description', 'completed');
+
+	//using pick to only pick required data
+	
 
 	if(!_.isBoolean(body.completed) || !_.isString(body.description) || body.description.trim().length === 0 ){
 		return res.status(404).send();
 	} 
+
+	//trim extra spaces
+	body.description = body.description.trim();
 	//add an id field
 	body.id = todoNextId++;
 	//push body into array "todos"
